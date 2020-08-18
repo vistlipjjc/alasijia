@@ -1,0 +1,127 @@
+/* 搜索页面 */
+.api-search {
+    margin-bottom: 10px;
+    text-align: center
+}
+
+.api-menu {
+    float: left;
+    width: 35%;
+    z-index: 0
+}
+
+.api-menu-full {
+    width: 100%;
+}
+
+.api-detail {
+    float: left;
+    width: 60%;
+    margin-left: 10px;
+}
+
+/* 基础表单样式 */
+.table-info-class {
+    width: 80%;
+    margin-left: 30px;
+    border: 1px solid #D8DCE5;
+    border-collapse: collapse;
+}
+
+.table-info-class td {
+    height: 40px;
+    padding: 10px;
+}
+
+/* 测试表样式 */
+.table-class {
+    width: 100%;
+    border: 0px;
+    border-top: 1px solid #E5E5E5;
+    border-left: 0;
+    border-collapse: collapse;
+}
+
+.table-class td {
+    height: 40px;
+    line-height: 40px;
+    padding: 5px 20px;
+    border-bottom: 1px solid #E5E5E5;
+}
+
+.table-class th {
+    height: 40px;
+    line-height: 40px;
+    padding: 5px 20px;
+    border-bottom: 1px solid #E5E5E5;
+    font-weight: 500;
+}
+
+.des-table-class tr :first-child {
+    color: #868B9B;
+}
+
+.parm-table-class :first-child td {
+    color: #868B9B;
+}
+
+.post {
+    border-color: #00a854;
+    background-color: #00a854;
+}
+
+.put {
+    border-color: #fca130;
+    background-color: #fca130;
+}
+
+.delete {
+    border-color: #f93e3e;
+    background-color: #f93e3e;
+}
+
+.get {
+    background-color: #61affe;
+    background-color: #61affe;
+}
+
+.patch {
+    border-color: #50e3c2;
+    background: #50e3c2;
+}
+
+.post-font {
+    color: #00a854;
+}
+
+.put-font {
+    color: #fca130;
+}
+
+.delete-font {
+    color: #f93e3e;
+}
+
+.get-font {
+    color: #61affe;
+}
+
+.patch-font {
+    color: #50e3c2;
+}
+
+.method {
+    color: white;
+    padding: 5px 10px 5px 10px;
+    margin: 10px;
+}
+
+.search-controller {
+    float: right;
+    color: #999;
+}
+
+.item {
+    margin: 30px 20px 20px 30px;
+}
+

@@ -1,0 +1,42 @@
+body {
+    font: 300 14px 'Helvetica Neue', Helvetica;
+  }
+  
+.node rect {
+  stroke: #333;
+  fill: #fff;
+}
+  
+.edgePath path {
+  stroke: #333;
+  fill: #333;
+  stroke-width: 1.5px;
+}
+
+g.hover {
+  fill: #fff;
+}
+
+g.hover rect {
+  fill: #4058ff;
+}
+
+g.hover-edge {
+  stroke: #4058ff;
+}
+
+g.hover-light rect {
+  fill: #8a9eff;
+}
+
+svg.dark {
+  background-color: #7a7a7a;
+}
+
+svg.dark .node:not(.hover):not(.hover-light) rect {
+  opacity: 0.3;
+}
+
+svg.dark g.node {
+  fill: #fff;
+}

@@ -1,0 +1,277 @@
+<style lang="less">
+    .single-page-bottom {
+        padding: 30px 30px 20px;
+        p {
+            margin: 0;
+            font-size: 12px;
+            line-height: 24px;
+            color: #999;
+            text-align: center;
+        }
+    }
+
+    .main_logo_box {
+        height: 60px;
+        font-size: 16px;
+        line-height: 60px;
+        color: #fff;
+        background: #0A7CE0;
+    }
+    .main_logo {
+        width: 25px;
+        margin-top: -2px;
+        margin-right: 5px;
+    }
+
+    .main-header-con {
+        position: inherit !important;
+    }
+    .main-header-con .ivu-btn-text:focus {
+        box-shadow: none;
+    }
+
+    @import "./main.less";
+</style>
+<template>
+    <div class="main" :class="{'main-hide-text': shrink}">
+        <div class="sidebar-menu-con" :style="{width: shrink?'60px':'200px', overflow: shrink ? 'visible' : 'auto'}">
+            <shrinkable-menu
+                :shrink="shrink"
+                @on-change="handleSubmenuChange"
+                :theme="menuTheme"
+                :before-push="beforePush"
+                :open-names="openedSubmenuArr"
+                :menu-list="menuList">
+                <div slot="top" class="logo-con" >
+                    <!-- <Button v-show="!shrink" class="logo-font" type="primary">精准扶贫系统</Button>
+                    <Button v-show="shrink" class="logo-font" type="primary">TPA</Button> -->
+                    <div class="main_logo_box">
+                        <!-- <img class="main_logo" src="../images/logo_icon.png" /> -->
+                        <span class="main_logo_text" v-show="!shrink">信息服务平台</span>
+                    </div>
+                </div>
+            </shrinkable-menu>
+        </div>
+        <div class="main-header-con" :style="{paddingLeft: shrink?'60px':'200px'}">
+            <div class="main-header">
+                <div class="navicon-con">
+                    <Button :style="{transform: 'rotateZ(' + (this.shrink ? '-90' : '0') + 'deg)'}" type="text" @click="toggleClick">
+                        <Icon type="navicon" size="32"></Icon>
+                    </Button>
+                </div>
+                <div class="header-middle-con">
+                    <div class="main-breadcrumb">
+                        <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>
+                    </div>
+                </div>
+                <div class="header-avator-con" style="width: 210px;">
+                    <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>
+                    <lock-screen></lock-screen>
+                    <!-- <message-tip v-model="hasreadCount"></message-tip>
+                    <theme-switch></theme-switch> -->
+
+                    <div class="user-dropdown-menu-con">
+                        <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
+                            <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown">
+                                <a href="javascript:void(0)">
+                                    <span class="main-user-name">{{ userName }}</span>
+                                    <Icon type="arrow-down-b"></Icon>
+                                </a>
+                                <DropdownMenu slot="list">
+                                    <DropdownItem name="ownSpace">个人中心</DropdownItem>
+                                    <DropdownItem name="loginout" divided>退出登录</DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                            <Avatar :src="avatorPath" style="background: #619fe7;margin-left: 10px;"></Avatar>
+                        </Row>
+                    </div>
+                </div>
+            </div>
+            <div class="tags-con">
+                <tags-page-opened :pageTagsList="pageTagsList"></tags-page-opened>
+            </div>
+        </div>
+        <div class="single-page-con" :style="{left: shrink?'60px':'200px'}">
+            <div class="single-page">
+                <!--<keep-alive :include="cachePage"> 解决页面状态问题 -->
+                
+                <!-- 2019-01-03，srf屏蔽，为了解决页面缓存问题 -->
+                <!-- <keep-alive>
+                    <router-view v-if="$route.meta.keepAlive"></router-view>
+                </keep-alive>
+                <router-view v-if="!$route.meta.keepAlive"></router-view> -->
+
+                <router-view></router-view>
+
+                <!-- <div class="single-page-bottom">
+                    <p>Copyright@ 2018 中国建设银行-万小企扶万农户普惠金融精准扶贫网版权所有</p>
+                    <p>建议使用IE10+，Chrome，Firefox或者其他高级浏览器，1280*800分辨率</p>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    import shrinkableMenu from './main-components/shrinkable-menu/shrinkable-menu.vue';
+    import tagsPageOpened from './main-components/tags-page-opened.vue';
+    import breadcrumbNav from './main-components/breadcrumb-nav.vue';
+    import fullScreen from './main-components/fullscreen.vue';
+    import lockScreen from './main-components/lockscreen/lockscreen.vue';
+    import messageTip from './main-components/message-tip.vue';
+    import themeSwitch from './main-components/theme-switch/theme-switch.vue';
+    import util from '@/libs/util.js';
+    import storage from '@/util/storage';
+
+    export default {
+        components: {
+            shrinkableMenu,
+            tagsPageOpened,
+            breadcrumbNav,
+            fullScreen,
+            lockScreen,
+            messageTip,
+            themeSwitch
+        },
+        data () {
+            return {
+                shrink: false,
+                userName: '',
+                isFullScreen: false,
+                openedSubmenuArr: this.$store.state.app.openedSubmenuArr,
+                hasreadCount:0
+            };
+        },
+        computed: {
+            menuList () {
+                return this.$store.state.app.menuList;
+            },
+            pageTagsList () {
+                return this.$store.state.app.pageOpenedList; // 打开的页面的页面对象
+            },
+            currentPath () {
+                return this.$store.state.app.currentPath; // 当前面包屑数组
+            },
+            avatorPath () {
+                return localStorage.avatorImgPath;
+            },
+            cachePage () {
+                return this.$store.state.app.cachePage;
+            },
+            lang () {
+                return this.$store.state.app.lang;
+            },
+            menuTheme () {
+                return this.$store.state.app.menuTheme;
+            },
+
+        },
+        methods: {
+            init () {
+                this.userName = storage.getItem('user').staffName;
+                let pathArr = util.setCurrentPath(this, this.$route.name);
+                if (pathArr.length >= 2) {
+                    this.$store.commit('addOpenSubmenu', pathArr[1].name);
+                }
+                let messageCount = 3;
+                this.messageCount = messageCount.toString();
+                this.checkTag(this.$route.name);
+                this.$store.commit('setMessageCount', 3);
+                this.mesCount();
+            },
+            toggleClick () {
+                this.shrink = !this.shrink;
+            },
+            handleClickUserDropdown (name) {
+                if (name === 'ownSpace') {
+                    util.openNewPage(this, 'ownspace_index');
+                    this.$router.push({
+                        name: 'ownspace_index'
+                    });
+                } else if (name === 'loginout') {
+                    // 退出登录
+                    this.$store.dispatch('userLogout', true);
+                }
+            },
+            checkTag (name) {
+                let openpageHasTag = this.pageTagsList.some(item => {
+                    if (item.name === name) {
+                        return true;
+                    }
+                });
+                if (!openpageHasTag) { //  解决关闭当前标签后再点击回退按钮会退到当前页时没有标签的问题
+                    util.openNewPage(this, name, this.$route.params || {}, this.$route.query || {});
+                }
+            },
+            handleSubmenuChange (val) {
+                // console.log(val)
+            },
+            beforePush (name) {
+                // if (name === 'accesstest_index') {
+                //     return false;
+                // } else {
+                //     return true;
+                // }
+                return true;
+            },
+            fullscreenChange (isFullScreen) {
+                // console.log(isFullScreen);
+            },
+            mesCount () {
+                this.$net.send({
+                    server: this.$services.sysService.staffNotifyRestController.synch
+                }).then((data) => {
+                     this.hasreadCount =  Number(data.inboxUnread);
+                });
+            }
+    },
+        watch: {
+            '$route' (to) {
+                this.$store.commit('setCurrentPageName', to.name);
+                let pathArr = util.setCurrentPath(this, to.name);
+                if (pathArr.length > 2) {
+                    this.$store.commit('addOpenSubmenu', pathArr[1].name);
+                }
+                this.checkTag(to.name);
+                localStorage.currentPageName = to.name;
+            },
+            lang () {
+                util.setCurrentPath(this, this.$route.name); // 在切换语言时用于刷新面包屑
+            }
+        },
+        mounted () {
+          this.init()
+          /* // 每隔10s查询是否有新消息
+          if(this.timer){
+            clearInterval(this.timer);
+          }else{
+            this.timer = setInterval(() => {
+                this.mesCount();
+              },10000
+            );
+          } */
+
+          // 是否有表单，是否需要提示
+          let flag = this.$route.meta.ifLeave &&  this.$route.params.opt && this.$route.params.opt !== 'view'
+          window.onbeforeunload = function (e) {
+            if (flag) {
+              e = e || window.event
+              e.returnValue = '确定离开此页面吗？'
+              return '确定离开此页面吗？'
+              // window.onbeforeunload = null
+            } else {
+              window.onbeforeunload =null
+            }
+          }
+        },
+
+          destroyed() {
+            window.onbeforeunload = null
+          },
+
+        created () {
+            // 显示打开的页面的列表
+            this.$store.commit('setOpenedList');
+        },
+
+    };
+</script>
